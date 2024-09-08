@@ -13,6 +13,9 @@ if not products:
 # Initialize cart
 cart = Cart()
 
+# Initialize transactions
+transactions = []
+
 def display_products():
     print("\nAvailable Products:")
     for idx, product in enumerate(products, start=1):
@@ -20,19 +23,21 @@ def display_products():
 
 def add_to_cart():
     display_products()
-    choice = int(input("\nEnter the product number to add to cart: ")) - 1
-    quantity = int(input("Enter the quantity: "))
-    
-    if 0 <= choice < len(products):
-        product = products[choice]
-        if product.stock >= quantity:
-            cart.add_product(product, quantity)
-            product.update_stock(-quantity)
-            print(f"Added {quantity} x {product.name} to the cart.")
+    try:
+        choice = int(input("\nEnter the product number to add to cart: ")) - 1
+        quantity = int(input("Enter the quantity: "))
+        if 0 <= choice < len(products):
+            product = products[choice]
+            if product.stock >= quantity:
+                cart.add_product(product, quantity)
+                product.update_stock(-quantity)
+                print(f"Added {quantity} x {product.name} to the cart.")
+            else:
+                print("Not enough stock available.")
         else:
-            print("Not enough stock available.")
-    else:
-        print("Invalid product number.")
+            print("Invalid product number.")
+    except ValueError:
+        print("Invalid input. Please enter a number.")
 
 def view_cart():
     print("\nCurrent Cart:")
@@ -44,6 +49,7 @@ def view_cart():
 
 def checkout():
     if cart.items:
+        transactions.append(cart.items.copy())
         cart.checkout()
         save_products(products)
     else:
@@ -62,6 +68,38 @@ def cancel_transaction():
     cart.clear_cart()
     print("Transaction cancelled. Cart is now empty.")
 
+def add_new_product():
+    name = input("Enter the product name: ")
+    price = float(input("Enter the product price: "))
+    stock = int(input("Enter the product stock: "))
+    new_product = Product(name, price, stock)
+    products.append(new_product)
+    save_products(products)
+    print(f"Product {name} added successfully.")
+
+def update_product():
+    display_products()
+    choice = int(input("\nEnter the product number to update: ")) - 1
+    if 0 <= choice < len(products):
+        product = products[choice]
+        print(f"Updating {product.name}")
+        product.price = float(input(f"Enter new price (current: {product.price}): "))
+        product.stock = int(input(f"Enter new stock (current: {product.stock}): "))
+        save_products(products)
+        print(f"Product {product.name} updated successfully.")
+    else:
+        print("Invalid product number.")
+
+def view_transactions():
+    print("\nTransaction Summary:")
+    for idx, transaction in enumerate(transactions, start=1):
+        print(f"Transaction {idx}:")
+        for item in transaction.values():
+            product = item['product']
+            quantity = item['quantity']
+            print(f"  {product.name} - {quantity} x ${product.price:.2f}")
+        print()
+
 def main():
     while True:
         print("\n1. View Products")
@@ -71,6 +109,9 @@ def main():
         print("5. Cancel Transaction")
         print("6. Checkout")
         print("7. Exit")
+        print("8. Add New Product")
+        print("9. Update Product")
+        print("10. View Transactions")
         choice = input("Choose an option: ")
 
         if choice == '1':
@@ -87,6 +128,12 @@ def main():
             checkout()
         elif choice == '7':
             break
+        elif choice == '8':
+            add_new_product()
+        elif choice == '9':
+            update_product()
+        elif choice == '10':
+            view_transactions()
         else:
             print("Invalid choice. Please try again.")
 
