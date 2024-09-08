@@ -1,11 +1,14 @@
 from models import Product, Cart
+from db import save_products, load_products
 
 # Initialize products
-products = [
-    Product("Gizmo", 19.99, 100),
-    Product("Widget", 29.99, 50),
-    Product("Doodad", 9.99, 200)
-]
+products = load_products()
+if not products:
+    products = [
+        Product("Gizmo", 19.99, 100),
+        Product("Widget", 29.99, 50),
+        Product("Doodad", 9.99, 200)
+    ]
 
 # Initialize cart
 cart = Cart()
@@ -42,6 +45,7 @@ def view_cart():
 def checkout():
     if cart.items:
         cart.checkout()
+        save_products(products)
     else:
         print("Your cart is empty.")
 
