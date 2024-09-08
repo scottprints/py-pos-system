@@ -1,5 +1,9 @@
 from models import Product, Cart, User
 from db import save_products, load_products
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Initialize products
 products = load_products()
@@ -21,6 +25,7 @@ users = []
 current_user = None
 
 def display_products():
+    logging.info("Displaying products")
     print("\nAvailable Products:")
     for idx, product in enumerate(products, start=1):
         print(f"{idx}. {product.name} - ${product.price:.2f} (Stock: {product.stock})")
@@ -33,6 +38,7 @@ def add_to_cart():
         if 0 <= choice < len(products):
             product = products[choice]
             if product.age_restricted:
+                logging.warning(f"Attempt to add age-restricted product {product.name} without admin approval")
                 print(f"{product.name} is age-restricted. Admin approval is required.")
                 if current_user is None:
                     print("No admin is currently logged in. Please call an admin for approval.")
@@ -40,15 +46,20 @@ def add_to_cart():
             if product.stock >= quantity:
                 cart.add_product(product, quantity)
                 product.update_stock(-quantity)
+                logging.info(f"Added {quantity} x {product.name} to the cart")
                 print(f"Added {quantity} x {product.name} to the cart.")
             else:
+                logging.warning(f"Not enough stock for product {product.name}")
                 print("Not enough stock available.")
         else:
+            logging.error("Invalid product number entered")
             print("Invalid product number.")
     except ValueError:
+        logging.error("Invalid input for product number or quantity")
         print("Invalid input. Please enter a number.")
 
 def view_cart():
+    logging.info("Viewing cart")
     print("\nCurrent Cart:")
     for item in cart.items.values():
         product = item['product']
@@ -61,7 +72,9 @@ def checkout():
         transactions.append(cart.items.copy())
         cart.checkout()
         save_products(products)
+        logging.info("Checkout completed")
     else:
+        logging.warning("Checkout attempted with an empty cart")
         print("Your cart is empty.")
 
 def remove_from_cart():
@@ -69,16 +82,20 @@ def remove_from_cart():
     product_name = input("\nEnter the product name to remove from cart: ")
     if product_name in cart.items:
         cart.remove_product(product_name)
+        logging.info(f"Removed {product_name} from the cart")
         print(f"Removed {product_name} from the cart.")
     else:
+        logging.error(f"Product {product_name} not found in cart")
         print("Product not found in cart.")
 
 def cancel_transaction():
     cart.clear_cart()
+    logging.info("Transaction cancelled")
     print("Transaction cancelled. Cart is now empty.")
 
 def add_new_product():
-    if current_user is None:
+    if current_user is None or current_user.role != 'admin':
+        logging.warning("Attempt to add new product without admin login")
         print("You must be logged in as an admin to perform this action.")
         return
     name = input("Enter the product name: ")
@@ -88,10 +105,12 @@ def add_new_product():
     new_product = Product(name, price, stock, age_restricted)
     products.append(new_product)
     save_products(products)
+    logging.info(f"Product {name} added successfully")
     print(f"Product {name} added successfully.")
 
 def update_product():
     if current_user is None:
+        logging.warning("Attempt to update product without admin login")
         print("You must be logged in as an admin to perform this action.")
         return
     display_products()
@@ -102,14 +121,18 @@ def update_product():
         product.price = float(input(f"Enter new price (current: {product.price}): "))
         product.stock = int(input(f"Enter new stock (current: {product.stock}): "))
         save_products(products)
+        logging.info(f"Product {product.name} updated successfully")
         print(f"Product {product.name} updated successfully.")
     else:
+        logging.error("Invalid product number entered for update")
         print("Invalid product number.")
 
 def view_transactions():
     if current_user is None:
+        logging.warning("Attempt to view transactions without admin login")
         print("You must be logged in as an admin to perform this action.")
         return
+    logging.info("Viewing transactions")
     print("\nTransaction Summary:")
     for idx, transaction in enumerate(transactions, start=1):
         print(f"Transaction {idx}:")
@@ -124,6 +147,7 @@ def register_user():
     password = input("Enter a password: ")
     new_user = User(username, password)
     users.append(new_user)
+    logging.info(f"User {username} registered successfully")
     print(f"User {username} registered successfully.")
 
 def login_user():
@@ -133,11 +157,65 @@ def login_user():
     for user in users:
         if user.username == username and user.password == password:
             current_user = user
+            logging.info(f"User {username} logged in successfully")
             print(f"User {username} logged in successfully.")
             return
+    logging.warning("Invalid username or password entered")
     print("Invalid username or password.")
 
+def apply_discount():
+    if current_user is None or current_user.role != 'admin':
+        logging.warning("Attempt to apply discount without admin login")
+        print("You must be logged in as an admin to perform this action.")
+        return
+    display_products()
+    choice = int(input("\nEnter the product number to apply discount: ")) - 1
+    if 0 <= choice < len(products):
+        product = products[choice]
+        discount = float(input(f"Enter discount percentage for {product.name} (e.g., 0.10 for 10%): "))
+        product.apply_discount(discount)
+        save_products(products)
+        logging.info(f"Discount of {discount*100}% applied to {product.name}")
+        print(f"Discount of {discount*100}% applied to {product.name}.")
+    else:
+        logging.error("Invalid product number entered for discount")
+        print("Invalid product number.")
+
+def remove_discount():
+    if current_user is None:
+        logging.warning("Attempt to remove discount without admin login")
+        print("You must be logged in as an admin to perform this action.")
+        return
+    display_products()
+    choice = int(input("\nEnter the product number to remove discount: ")) - 1
+    if 0 <= choice < len(products):
+        product = products[choice]
+        product.remove_discount()
+        save_products(products)
+        logging.info(f"Discount removed from {product.name}")
+        print(f"Discount removed from {product.name}.")
+    else:
+        logging.error("Invalid product number entered for removing discount")
+        print("Invalid product number.")
+
 def main():
+    actions = {
+        '1': register_user,
+        '2': login_user,
+        '3': display_products,
+        '4': add_to_cart,
+        '5': view_cart,
+        '6': remove_from_cart,
+        '7': cancel_transaction,
+        '8': checkout,
+        '9': add_new_product,
+        '10': update_product,
+        '11': view_transactions,
+        '12': apply_discount,
+        '13': remove_discount,
+        '14': exit
+    }
+
     while True:
         print("\n1. Register")
         print("2. Login")
@@ -150,34 +228,16 @@ def main():
         print("9. Add New Product")
         print("10. Update Product")
         print("11. View Transactions")
-        print("12. Exit")
+        print("12. Apply Discount")
+        print("13. Remove Discount")
+        print("14. Exit")
         choice = input("Choose an option: ")
 
-        if choice == '1':
-            register_user()
-        elif choice == '2':
-            login_user()
-        elif choice == '3':
-            display_products()
-        elif choice == '4':
-            add_to_cart()
-        elif choice == '5':
-            view_cart()
-        elif choice == '6':
-            remove_from_cart()
-        elif choice == '7':
-            cancel_transaction()
-        elif choice == '8':
-            checkout()
-        elif choice == '9':
-            add_new_product()
-        elif choice == '10':
-            update_product()
-        elif choice == '11':
-            view_transactions()
-        elif choice == '12':
-            break
+        action = actions.get(choice)
+        if action:
+            action()
         else:
+            logging.error("Invalid menu choice entered")
             print("Invalid choice. Please try again.")
 
 if __name__ == "__main__":

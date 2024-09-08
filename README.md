@@ -13,6 +13,7 @@ This is a modular Point of Sale (POS) system implemented in Python. It is design
 - **Age-Restricted Items**: Require approval for purchasing age-restricted items.
 - **Discounts**: Apply and remove discounts on products.
 - **Transaction History**: View a summary of all transactions.
+- **Logging**: Record events, errors, and runtime information for debugging and monitoring.
 
 ## Setup
 

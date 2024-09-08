@@ -1,15 +1,25 @@
 class Product:
-    def __init__(self, name, price, stock, age_restricted=False):
+    def __init__(self, name, price, stock, age_restricted=False, discount=0.0):
         self.name = name
         self.price = price
         self.stock = stock
         self.age_restricted = age_restricted
+        self.discount = discount
 
     def update_stock(self, amount):
         self.stock += amount
 
+    def apply_discount(self, discount):
+        self.discount = discount
+
+    def remove_discount(self):
+        self.discount = 0.0
+
+    def get_final_price(self):
+        return self.price * (1 - self.discount)
+
     def __repr__(self):
-        return f"Product(name={self.name}, price={self.price}, stock={self.stock}, age_restricted={self.age_restricted})"
+        return f"Product(name={self.name}, price={self.price}, stock={self.stock}, age_restricted={self.age_restricted}, discount={self.discount})"
 
 
 class Cart:
@@ -48,9 +58,10 @@ class Cart:
 
 
 class User:
-    def __init__(self, username, password):
+    def __init__(self, username, password, role='customer'):
         self.username = username
-        self.password = password  
+        self.password = password
+        self.role = role
 
     def __repr__(self):
-        return f"User(username={self.username})"
+        return f"User(username={self.username}, role={self.role})"
