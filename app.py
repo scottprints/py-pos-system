@@ -1,3 +1,4 @@
+from tkinter import messagebox, simpledialog
 from models import Product, Cart, User
 from db import save_products, load_products
 import logging
@@ -9,9 +10,9 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 products = load_products()
 if not products:
     products = [
-        Product("Gizmo", 19.99, 100),
-        Product("Widget", 29.99, 50),
-        Product("Doodad", 9.99, 200)
+        Product("Gizmo", 19.99, 100, category="Electronics"),
+        Product("Widget", 29.99, 50, category="Electronics"),
+        Product("Doodad", 9.99, 200, category="Accessories")
     ]
 
 # Initialize cart
@@ -96,18 +97,18 @@ def cancel_transaction():
 def add_new_product():
     if current_user is None or current_user.role != 'admin':
         logging.warning("Attempt to add new product without admin login")
-        print("You must be logged in as an admin to perform this action.")
+        messagebox.showwarning("Warning", "You must be logged in as an admin to perform this action.")
         return
-    name = input("Enter the product name: ")
-    price = float(input("Enter the product price: "))
-    stock = int(input("Enter the product stock: "))
-    age_restricted = input("Age-restricted? (yes/no): ").strip().lower() == 'yes'
-    category = input("Enter the product category: ")
+    name = simpledialog.askstring("Input", "Enter the product name:")
+    price = float(simpledialog.askstring("Input", "Enter the product price:"))
+    stock = int(simpledialog.askstring("Input", "Enter the product stock:"))
+    age_restricted = simpledialog.askstring("Input", "Age-restricted? (yes/no):").strip().lower() == 'yes'
+    category = simpledialog.askstring("Input", "Enter the product category:")
     new_product = Product(name, price, stock, age_restricted, category=category)
     products.append(new_product)
     save_products(products)
     logging.info(f"Product {name} added successfully")
-    print(f"Product {name} added successfully.")
+    messagebox.showinfo("Info", f"Product {name} added successfully.")
 
 def update_product():
     if current_user is None:
