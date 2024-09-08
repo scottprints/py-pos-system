@@ -1,0 +1,1 @@
+A modular POS system using Python
