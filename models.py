@@ -31,5 +31,13 @@ class Cart:
             total += item['product'].price * item['quantity']
         return total
 
+    def checkout(self):
+        for item in self.items.values():
+            product = item['product']
+            quantity = item['quantity']
+            product.update_stock(-quantity)
+        self.items.clear()
+        print("Checkout successful. Thank you for your purchase!")
+
     def __repr__(self):
         return f"Cart(items={self.items})"

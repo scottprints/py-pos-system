@@ -39,12 +39,19 @@ def view_cart():
         print(f"{product.name} - {quantity} x ${product.price:.2f}")
     print(f"Total: ${cart.calculate_total():.2f}")
 
+def checkout():
+    if cart.items:
+        cart.checkout()
+    else:
+        print("Your cart is empty.")
+
 def main():
     while True:
         print("\n1. View Products")
         print("2. Add to Cart")
         print("3. View Cart")
-        print("4. Exit")
+        print("4. Checkout")
+        print("5. Exit")
         choice = input("Choose an option: ")
 
         if choice == '1':
@@ -54,6 +61,8 @@ def main():
         elif choice == '3':
             view_cart()
         elif choice == '4':
+            checkout()
+        elif choice == '5':
             break
         else:
             print("Invalid choice. Please try again.")
