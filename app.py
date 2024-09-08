@@ -1,4 +1,4 @@
-from models import Product, Cart
+from models import Product, Cart, User
 from db import save_products, load_products
 
 # Initialize products
@@ -15,6 +15,10 @@ cart = Cart()
 
 # Initialize transactions
 transactions = []
+
+# Initialize users
+users = []
+current_user = None
 
 def display_products():
     print("\nAvailable Products:")
@@ -69,6 +73,9 @@ def cancel_transaction():
     print("Transaction cancelled. Cart is now empty.")
 
 def add_new_product():
+    if current_user is None:
+        print("You must be logged in as an admin to perform this action.")
+        return
     name = input("Enter the product name: ")
     price = float(input("Enter the product price: "))
     stock = int(input("Enter the product stock: "))
@@ -78,6 +85,9 @@ def add_new_product():
     print(f"Product {name} added successfully.")
 
 def update_product():
+    if current_user is None:
+        print("You must be logged in as an admin to perform this action.")
+        return
     display_products()
     choice = int(input("\nEnter the product number to update: ")) - 1
     if 0 <= choice < len(products):
@@ -91,6 +101,9 @@ def update_product():
         print("Invalid product number.")
 
 def view_transactions():
+    if current_user is None:
+        print("You must be logged in as an admin to perform this action.")
+        return
     print("\nTransaction Summary:")
     for idx, transaction in enumerate(transactions, start=1):
         print(f"Transaction {idx}:")
@@ -100,40 +113,64 @@ def view_transactions():
             print(f"  {product.name} - {quantity} x ${product.price:.2f}")
         print()
 
+def register_user():
+    username = input("Enter a username: ")
+    password = input("Enter a password: ")
+    new_user = User(username, password)
+    users.append(new_user)
+    print(f"User {username} registered successfully.")
+
+def login_user():
+    global current_user
+    username = input("Enter your username: ")
+    password = input("Enter your password: ")
+    for user in users:
+        if user.username == username and user.password == password:
+            current_user = user
+            print(f"User {username} logged in successfully.")
+            return
+    print("Invalid username or password.")
+
 def main():
     while True:
-        print("\n1. View Products")
-        print("2. Add to Cart")
-        print("3. View Cart")
-        print("4. Remove from Cart")
-        print("5. Cancel Transaction")
-        print("6. Checkout")
-        print("7. Exit")
-        print("8. Add New Product")
-        print("9. Update Product")
-        print("10. View Transactions")
+        print("\n1. Register")
+        print("2. Login")
+        print("3. View Products")
+        print("4. Add to Cart")
+        print("5. View Cart")
+        print("6. Remove from Cart")
+        print("7. Cancel Transaction")
+        print("8. Checkout")
+        print("9. Add New Product")
+        print("10. Update Product")
+        print("11. View Transactions")
+        print("12. Exit")
         choice = input("Choose an option: ")
 
         if choice == '1':
-            display_products()
+            register_user()
         elif choice == '2':
-            add_to_cart()
+            login_user()
         elif choice == '3':
-            view_cart()
+            display_products()
         elif choice == '4':
-            remove_from_cart()
+            add_to_cart()
         elif choice == '5':
-            cancel_transaction()
+            view_cart()
         elif choice == '6':
-            checkout()
+            remove_from_cart()
         elif choice == '7':
-            break
+            cancel_transaction()
         elif choice == '8':
-            add_new_product()
+            checkout()
         elif choice == '9':
-            update_product()
+            add_new_product()
         elif choice == '10':
+            update_product()
+        elif choice == '11':
             view_transactions()
+        elif choice == '12':
+            break
         else:
             print("Invalid choice. Please try again.")
 
