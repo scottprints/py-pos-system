@@ -14,6 +14,7 @@ This is a modular Point of Sale (POS) system implemented in Python. It is design
 - **Discounts**: Apply and remove discounts on products.
 - **Transaction History**: View a summary of all transactions.
 - **Logging**: Record events, errors, and runtime information for debugging and monitoring.
+- **AI-Based Recommendations**: Provide product recommendations based on user purchase history.
 
 ## Setup
 
@@ -37,10 +38,31 @@ This is a modular Point of Sale (POS) system implemented in Python. It is design
 3. Ensure the `products.json` file is in the root directory with the following initial content:
     ```json
     [
-        {"name": "Gizmo", "price": 19.99, "stock": 100, "age_restricted": false},
-        {"name": "Widget", "price": 29.99, "stock": 50, "age_restricted": false},
-        {"name": "Doodad", "price": 9.99, "stock": 200, "age_restricted": false},
-        {"name": "Alcohol", "price": 15.99, "stock": 30, "age_restricted": true}
+        {"name": "Apple", "price": 0.50, "stock": 150, "age_restricted": false},
+        {"name": "Banana", "price": 0.30, "stock": 200, "age_restricted": false},
+        {"name": "Orange", "price": 0.60, "stock": 100, "age_restricted": false},
+        {"name": "Milk", "price": 1.20, "stock": 50, "age_restricted": false},
+        {"name": "Cheese", "price": 2.50, "stock": 40, "age_restricted": false},
+        {"name": "Bread", "price": 1.00, "stock": 80, "age_restricted": false},
+        {"name": "Eggs", "price": 2.00, "stock": 60, "age_restricted": false},
+        {"name": "Butter", "price": 1.50, "stock": 30, "age_restricted": false},
+        {"name": "Chicken Breast", "price": 5.00, "stock": 25, "age_restricted": false},
+        {"name": "Ground Beef", "price": 4.00, "stock": 20, "age_restricted": false},
+        {"name": "Salmon Fillet", "price": 7.00, "stock": 15, "age_restricted": false},
+        {"name": "Cereal", "price": 3.00, "stock": 40, "age_restricted": false},
+        {"name": "Pasta", "price": 1.20, "stock": 70, "age_restricted": false},
+        {"name": "Rice", "price": 1.00, "stock": 60, "age_restricted": false},
+        {"name": "Tomato Sauce", "price": 1.50, "stock": 50, "age_restricted": false},
+        {"name": "Olive Oil", "price": 5.00, "stock": 20, "age_restricted": false},
+        {"name": "Coffee", "price": 4.00, "stock": 30, "age_restricted": false},
+        {"name": "Tea", "price": 3.00, "stock": 40, "age_restricted": false},
+        {"name": "Soda", "price": 1.00, "stock": 100, "age_restricted": false},
+        {"name": "Beer", "price": 2.00, "stock": 50, "age_restricted": true},
+        {"name": "Wine", "price": 10.00, "stock": 30, "age_restricted": true},
+        {"name": "Toilet Paper", "price": 5.00, "stock": 60, "age_restricted": false},
+        {"name": "Shampoo", "price": 4.00, "stock": 40, "age_restricted": false},
+        {"name": "Soap", "price": 1.50, "stock": 50, "age_restricted": false},
+        {"name": "Toothpaste", "price": 2.50, "stock": 30, "age_restricted": false}
     ]
     ```
 

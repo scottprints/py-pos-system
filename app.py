@@ -102,7 +102,8 @@ def add_new_product():
     price = float(input("Enter the product price: "))
     stock = int(input("Enter the product stock: "))
     age_restricted = input("Age-restricted? (yes/no): ").strip().lower() == 'yes'
-    new_product = Product(name, price, stock, age_restricted)
+    category = input("Enter the product category: ")
+    new_product = Product(name, price, stock, age_restricted, category=category)
     products.append(new_product)
     save_products(products)
     logging.info(f"Product {name} added successfully")
@@ -120,6 +121,7 @@ def update_product():
         print(f"Updating {product.name}")
         product.price = float(input(f"Enter new price (current: {product.price}): "))
         product.stock = int(input(f"Enter new stock (current: {product.stock}): "))
+        product.category = input(f"Enter new category (current: {product.category}): ")
         save_products(products)
         logging.info(f"Product {product.name} updated successfully")
         print(f"Product {product.name} updated successfully.")
@@ -198,6 +200,21 @@ def remove_discount():
         logging.error("Invalid product number entered for removing discount")
         print("Invalid product number.")
 
+from recommendation import get_recommendations
+
+def recommend_products():
+    if not products:
+        print("No products available for recommendation.")
+        return
+    product_name = input("Enter the product name for recommendations: ")
+    if product_name not in [product.name for product in products]:
+        print("Product not found.")
+        return
+    recommendations = get_recommendations(products, product_name)
+    print(f"Recommendations for {product_name}:")
+    for product in recommendations:
+        print(f"- {product.name} ({product.category})")
+
 def main():
     actions = {
         '1': register_user,
@@ -213,7 +230,8 @@ def main():
         '11': view_transactions,
         '12': apply_discount,
         '13': remove_discount,
-        '14': exit
+        '14': recommend_products,
+        '15': exit
     }
 
     while True:
@@ -230,7 +248,8 @@ def main():
         print("11. View Transactions")
         print("12. Apply Discount")
         print("13. Remove Discount")
-        print("14. Exit")
+        print("14. Recommend Products")
+        print("15. Exit")
         choice = input("Choose an option: ")
 
         action = actions.get(choice)
