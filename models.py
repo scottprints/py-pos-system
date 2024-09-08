@@ -39,5 +39,8 @@ class Cart:
         self.items.clear()
         print("Checkout successful. Thank you for your purchase!")
 
+    def clear_cart(self):
+        self.items.clear()
+
     def __repr__(self):
         return f"Cart(items={self.items})"

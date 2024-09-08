@@ -45,13 +45,28 @@ def checkout():
     else:
         print("Your cart is empty.")
 
+def remove_from_cart():
+    view_cart()
+    product_name = input("\nEnter the product name to remove from cart: ")
+    if product_name in cart.items:
+        cart.remove_product(product_name)
+        print(f"Removed {product_name} from the cart.")
+    else:
+        print("Product not found in cart.")
+
+def cancel_transaction():
+    cart.clear_cart()
+    print("Transaction cancelled. Cart is now empty.")
+
 def main():
     while True:
         print("\n1. View Products")
         print("2. Add to Cart")
         print("3. View Cart")
-        print("4. Checkout")
-        print("5. Exit")
+        print("4. Remove from Cart")
+        print("5. Cancel Transaction")
+        print("6. Checkout")
+        print("7. Exit")
         choice = input("Choose an option: ")
 
         if choice == '1':
@@ -61,8 +76,12 @@ def main():
         elif choice == '3':
             view_cart()
         elif choice == '4':
-            checkout()
+            remove_from_cart()
         elif choice == '5':
+            cancel_transaction()
+        elif choice == '6':
+            checkout()
+        elif choice == '7':
             break
         else:
             print("Invalid choice. Please try again.")
