@@ -32,6 +32,11 @@ def add_to_cart():
         quantity = int(input("Enter the quantity: "))
         if 0 <= choice < len(products):
             product = products[choice]
+            if product.age_restricted:
+                print(f"{product.name} is age-restricted. Admin approval is required.")
+                if current_user is None:
+                    print("No admin is currently logged in. Please call an admin for approval.")
+                    return
             if product.stock >= quantity:
                 cart.add_product(product, quantity)
                 product.update_stock(-quantity)
@@ -79,7 +84,8 @@ def add_new_product():
     name = input("Enter the product name: ")
     price = float(input("Enter the product price: "))
     stock = int(input("Enter the product stock: "))
-    new_product = Product(name, price, stock)
+    age_restricted = input("Age-restricted? (yes/no): ").strip().lower() == 'yes'
+    new_product = Product(name, price, stock, age_restricted)
     products.append(new_product)
     save_products(products)
     print(f"Product {name} added successfully.")

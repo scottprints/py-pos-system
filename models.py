@@ -1,14 +1,15 @@
 class Product:
-    def __init__(self, name, price, stock):
+    def __init__(self, name, price, stock, age_restricted=False):
         self.name = name
         self.price = price
         self.stock = stock
+        self.age_restricted = age_restricted
 
     def update_stock(self, amount):
         self.stock += amount
 
     def __repr__(self):
-        return f"Product(name={self.name}, price={self.price}, stock={self.stock})"
+        return f"Product(name={self.name}, price={self.price}, stock={self.stock}, age_restricted={self.age_restricted})"
 
 
 class Cart:
