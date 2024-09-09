@@ -1,4 +1,4 @@
-# Python Point of Sale (POS) System
+    # Python Point of Sale (POS) System
 
 ## Overview
 
@@ -75,4 +75,4 @@ This is a modular Point of Sale (POS) system implemented in Python. It is design
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
