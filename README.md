@@ -37,12 +37,17 @@ This is a modular Point of Sale (POS) system implemented in Python. It is design
 
 ## Usage
 
-1. Run the application:
+1. Run the original GUI application:
     ```sh
-    python gui.py
+    python gui_original.py
     ```
 
-2. Follow the on-screen prompts to interact with the POS system.
+2. Run the touchscreen-optimized GUI application:
+    ```sh
+    python gui_touchscreen.py
+    ```
+
+3. Follow the on-screen prompts to interact with the POS system.
 
 ### Main Menu Options
 
@@ -65,7 +70,8 @@ This is a modular Point of Sale (POS) system implemented in Python. It is design
 ## Code Structure
 
 - `app.py`: Main application file containing the CLI and core functions.
-- `gui.py`: GUI application file using `tkinter`.
+- `gui_original.py`: Original GUI application file using `tkinter`.
+- `gui_touchscreen.py`: Touchscreen-optimized GUI application file using `tkinter`.
 - `models.py`: Contains the necessary classes (`Product`, `Cart`, `User`).
 - `db.py`: Handles saving and loading product data to/from `products.json`.
 - `recommendation.py`: Contains the recommendation logic using `scikit-learn`.
