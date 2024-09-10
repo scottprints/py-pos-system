@@ -69,7 +69,7 @@ class POSApp:
         product_idx = selected_product[0]
         quantity_entry = tk.Entry(self.root, font=("Helvetica", 14))
         quantity_entry.place_forget()
-        virtual_keyboard = VirtualKeyboard(quantity_entry)
+        virtual_keyboard = VirtualKeyboard(quantity_entry, prompt="Enter the quantity of items:")
         self.root.wait_window(virtual_keyboard)
         try:
             quantity = int(quantity_entry.get())

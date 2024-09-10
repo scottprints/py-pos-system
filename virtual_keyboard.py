@@ -1,15 +1,15 @@
 import tkinter as tk
 
 class VirtualKeyboard(tk.Toplevel):
-    def __init__(self, entry_widget):
+    def __init__(self, entry_widget, prompt="Enter the quantity of items:"):
         super().__init__()
         self.entry_widget = entry_widget
         self.title("Virtual Keyboard")
         self.geometry("800x600")
-        self.create_widgets()
+        self.create_widgets(prompt)
 
-    def create_widgets(self):
-        self.display_label = tk.Label(self, text="", font=("Helvetica", 24))
+    def create_widgets(self, prompt):
+        self.display_label = tk.Label(self, text=prompt, font=("Helvetica", 24))
         self.display_label.place(relwidth=0.9, relheight=0.1, relx=0.05, rely=0.05)
 
         keys = [
@@ -33,6 +33,5 @@ class VirtualKeyboard(tk.Toplevel):
         else:
             self.entry_widget.insert(tk.END, key)
         
-        # Fix for stupid label reference vkey loop
         if self.display_label.winfo_exists():
             self.display_label.config(text=self.entry_widget.get())
