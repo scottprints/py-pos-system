@@ -5,12 +5,12 @@ class VirtualKeyboard(tk.Toplevel):
         super().__init__()
         self.entry_widget = entry_widget
         self.title("Virtual Keyboard")
-        self.geometry("400x300")
+        self.geometry("800x600")
         self.create_widgets()
 
     def create_widgets(self):
-        self.display_label = tk.Label(self, text="", font=("Helvetica", 16))
-        self.display_label.grid(row=0, column=0, columnspan=3, pady=10)
+        self.display_label = tk.Label(self, text="", font=("Helvetica", 24))
+        self.display_label.place(relwidth=0.9, relheight=0.1, relx=0.05, rely=0.05)
 
         keys = [
             '1', '2', '3',
@@ -20,8 +20,8 @@ class VirtualKeyboard(tk.Toplevel):
         ]
 
         for i, key in enumerate(keys):
-            button = tk.Button(self, text=key, width=5, height=2, command=lambda k=key: self.on_key_press(k))
-            button.grid(row=(i//3)+1, column=i%3, padx=5, pady=5)
+            button = tk.Button(self, text=key, font=("Helvetica", 18), command=lambda k=key: self.on_key_press(k))
+            button.place(relwidth=0.25, relheight=0.15, relx=(i % 3) * 0.3 + 0.05, rely=(i // 3) * 0.15 + 0.2)
 
     def on_key_press(self, key):
         if key == 'Enter':
@@ -32,4 +32,7 @@ class VirtualKeyboard(tk.Toplevel):
             self.entry_widget.insert(tk.END, current_text[:-1])
         else:
             self.entry_widget.insert(tk.END, key)
-        self.display_label.config(text=self.entry_widget.get())
+        
+        # Fix for stupid label reference vkey loop
+        if self.display_label.winfo_exists():
+            self.display_label.config(text=self.entry_widget.get())

@@ -13,49 +13,46 @@ class POSApp:
     def __init__(self, root):
         self.root = root
         self.root.title("POS System")
-        self.root.geometry("1024x768")
+        self.root.attributes('-fullscreen', True)
 
         self.create_widgets()
 
     def create_widgets(self):
         # Create frames
-        self.left_frame = tk.Frame(self.root, width=512, height=768, bg="lightgrey")
-        self.left_frame.grid(row=0, column=0, sticky="nsew")
+        self.left_frame = tk.Frame(self.root, bg="lightgrey")
+        self.left_frame.place(relwidth=0.5, relheight=1.0)
 
-        self.right_frame = tk.Frame(self.root, width=512, height=768)
-        self.right_frame.grid(row=0, column=1, sticky="nsew")
+        self.right_frame = tk.Frame(self.root)
+        self.right_frame.place(relx=0.5, relwidth=0.5, relheight=1.0)
 
         # Left frame (Product display)
-        self.product_listbox = tk.Listbox(self.left_frame, width=50, height=30, font=("Helvetica", 16))
-        self.product_listbox.pack(pady=20)
+        self.product_listbox = tk.Listbox(self.left_frame, font=("Helvetica", 14))
+        self.product_listbox.place(relwidth=0.9, relheight=0.7, rely=0.05, relx=0.05)
 
-        self.refresh_products_button = tk.Button(self.left_frame, text="Refresh Products", command=self.refresh_products, font=("Helvetica", 16), height=2)
-        self.refresh_products_button.pack(pady=10)
+        self.refresh_products_button = tk.Button(self.left_frame, text="Refresh Products", command=self.refresh_products, font=("Helvetica", 14))
+        self.refresh_products_button.place(relwidth=0.9, relheight=0.1, rely=0.8, relx=0.05)
 
         # Right frame (Cart and actions)
-        self.cart_listbox = tk.Listbox(self.right_frame, width=50, height=15, font=("Helvetica", 16))
-        self.cart_listbox.pack(pady=20)
+        self.cart_listbox = tk.Listbox(self.right_frame, font=("Helvetica", 14))
+        self.cart_listbox.place(relwidth=0.9, relheight=0.4, rely=0.05, relx=0.05)
 
-        self.total_label = tk.Label(self.right_frame, text="Total: $0.00", font=("Helvetica", 16))
-        self.total_label.pack(pady=10)
+        self.total_label = tk.Label(self.right_frame, text="Total: $0.00", font=("Helvetica", 14))
+        self.total_label.place(relwidth=0.9, relheight=0.1, rely=0.5, relx=0.05)
 
-        self.add_to_cart_button = tk.Button(self.right_frame, text="Add to Cart", command=self.add_to_cart, font=("Helvetica", 16), height=2)
-        self.add_to_cart_button.pack(pady=5)
+        self.add_to_cart_button = tk.Button(self.right_frame, text="Add to Cart", command=self.add_to_cart, font=("Helvetica", 14))
+        self.add_to_cart_button.place(relwidth=0.9, relheight=0.08, rely=0.6, relx=0.05)
 
-        self.remove_from_cart_button = tk.Button(self.right_frame, text="Remove from Cart", command=self.remove_from_cart, font=("Helvetica", 16), height=2)
-        self.remove_from_cart_button.pack(pady=5)
+        self.remove_from_cart_button = tk.Button(self.right_frame, text="Remove from Cart", command=self.remove_from_cart, font=("Helvetica", 14))
+        self.remove_from_cart_button.place(relwidth=0.9, relheight=0.08, rely=0.68, relx=0.05)
 
-        self.checkout_button = tk.Button(self.right_frame, text="Checkout", command=self.checkout, font=("Helvetica", 16), height=2)
-        self.checkout_button.pack(pady=5)
+        self.checkout_button = tk.Button(self.right_frame, text="Checkout", command=self.checkout, font=("Helvetica", 14))
+        self.checkout_button.place(relwidth=0.9, relheight=0.08, rely=0.76, relx=0.05)
 
-        self.cancel_transaction_button = tk.Button(self.right_frame, text="Cancel Transaction", command=self.cancel_transaction, font=("Helvetica", 16), height=2)
-        self.cancel_transaction_button.pack(pady=5)
+        self.cancel_transaction_button = tk.Button(self.right_frame, text="Cancel Transaction", command=self.cancel_transaction, font=("Helvetica", 14))
+        self.cancel_transaction_button.place(relwidth=0.9, relheight=0.08, rely=0.84, relx=0.05)
 
-        self.recommend_products_button = tk.Button(self.right_frame, text="Recommend Products", command=self.recommend_products, font=("Helvetica", 16), height=2)
-        self.recommend_products_button.pack(pady=5)
-
-        self.exit_button = tk.Button(self.right_frame, text="Exit", command=self.root.quit, font=("Helvetica", 16), height=2)
-        self.exit_button.pack(pady=5)
+        self.exit_button = tk.Button(self.right_frame, text="Exit", command=self.root.quit, font=("Helvetica", 14))
+        self.exit_button.place(relwidth=0.9, relheight=0.08, rely=0.92, relx=0.05)
 
         self.refresh_products()
 
@@ -70,8 +67,8 @@ class POSApp:
             messagebox.showwarning("Warning", "Please select a product to add to the cart.")
             return
         product_idx = selected_product[0]
-        quantity_entry = tk.Entry(self.root, font=("Helvetica", 16))
-        quantity_entry.grid(row=1, column=0, padx=10, pady=10)  # Using grid instead of pack AS Tkinter cannot mix pack/grid in same parent widget
+        quantity_entry = tk.Entry(self.root, font=("Helvetica", 14))
+        quantity_entry.place_forget()
         virtual_keyboard = VirtualKeyboard(quantity_entry)
         self.root.wait_window(virtual_keyboard)
         try:
@@ -138,16 +135,16 @@ class POSApp:
         for idx, product in enumerate(recommendations, start=1):
             recommendation_text += f"{idx}. {product.name} ({product.category})\n"
         recommendation_text += "\nSelect a product number to add to cart."
-        selected_recommendation_entry = tk.Entry(self.root, font=("Helvetica", 16))
-        selected_recommendation_entry.grid(row=1, column=0, padx=10, pady=10)
+        selected_recommendation_entry = tk.Entry(self.root, font=("Helvetica", 14))
+        selected_recommendation_entry.place_forget()
         virtual_keyboard = VirtualKeyboard(selected_recommendation_entry)
         self.root.wait_window(virtual_keyboard)
         try:
             selected_recommendation = int(selected_recommendation_entry.get())
             if selected_recommendation is not None and 1 <= selected_recommendation <= len(recommendations):
                 recommended_product = recommendations[selected_recommendation - 1]
-                quantity_entry = tk.Entry(self.root, font=("Helvetica", 16))
-                quantity_entry.grid(row=1, column=0, padx=10, pady=10)
+                quantity_entry = tk.Entry(self.root, font=("Helvetica", 14))
+                quantity_entry.place_forget()
                 virtual_keyboard = VirtualKeyboard(quantity_entry)
                 self.root.wait_window(virtual_keyboard)
                 quantity = int(quantity_entry.get())
