@@ -1,4 +1,4 @@
-    # Python Point of Sale (POS) System
+# Python Point of Sale (POS) System
 
 ## Overview
 
@@ -49,23 +49,17 @@ This is a modular Point of Sale (POS) system implemented in Python. It is design
 
 3. Follow the on-screen prompts to interact with the POS system.
 
-### Main Menu Options
+## Functionalities
 
-1. **Register**: Register a new user.
-2. **Login**: Login as an existing user.
-3. **View Products**: Display all available products.
-4. **Add to Cart**: Add products to the cart.
-5. **View Cart**: View the current cart.
-6. **Remove from Cart**: Remove products from the cart.
-7. **Cancel Transaction**: Clear the current cart.
-8. **Checkout**: Complete the transaction and save the state of products.
-9. **Add New Product**: Add a new product (admin only).
-10. **Update Product**: Update an existing product (admin only).
-11. **View Transactions**: View a summary of all transactions (admin only).
-12. **Apply Discount**: Apply a discount to a product (admin only).
-13. **Remove Discount**: Remove a discount from a product (admin only).
-14. **Recommend Products**: Get product recommendations based on a selected product.
-15. **Exit**: Exit the application.
+The POS system provides a range of functionalities including:
+
+- **User Registration and Login**: Register new users and login existing users.
+- **Product Management**: View, add, and update products (admin only).
+- **Cart Management**: Add products to the cart, view the cart, and remove products from the cart.
+- **Checkout**: Complete transactions and save the state of products.
+- **Transaction History**: View a summary of all transactions (admin only).
+- **Discount Management**: Apply and remove discounts on products (admin only).
+- **Product Recommendations**: Get product recommendations based on a selected product.
 
 ## Code Structure
 
