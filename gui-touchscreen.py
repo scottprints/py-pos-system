@@ -58,8 +58,8 @@ class POSApp:
 
     def refresh_products(self):
         self.product_listbox.delete(0, tk.END)
-        for idx, product in enumerate(products, start=1):
-            self.product_listbox.insert(tk.END, f"{idx}. {product.name} - ${product.price:.2f} (Stock: {product.stock})")
+        for product in products:
+            self.product_listbox.insert(tk.END, f"{product.name} - ${product.price:.2f} (Stock: {product.stock})")
 
     def add_to_cart(self):
         selected_product = self.product_listbox.curselection()
